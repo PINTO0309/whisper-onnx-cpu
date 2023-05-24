@@ -5,6 +5,8 @@ This repository has been reimplemented with ONNX and TensorRT using [zhuzilin/wh
 
 No need to install PyTorch or TensorFlow. All backend logic using PyTorch was rewritten to a Numpy implementation from scratch.
 
+Click here for GPU version: https://github.com/PINTO0309/whisper-onnx-tensorrt
+
 ## 1. Environment
 Although it can run directly on the host PC, I strongly recommend the use of Docker to avoid breaking the environment.
 
