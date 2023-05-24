@@ -1,0 +1,59 @@
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
+ARG USERNAME=user
+ARG OS=ubuntu2204
+ARG ONNXVER=1.13.1
+ARG ONNXRUNTIMEVER=1.13.1
+
+SHELL ["/bin/bash", "-c"]
+
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends \
+        curl \
+        wget \
+        gcc \
+        git \
+        make \
+        sudo \
+        build-essential \
+        ca-certificates \
+    && apt-get install -y \
+        software-properties-common \
+    && apt-get install -y  --no-install-recommends \
+        software-properties-common \
+        python3-all-dev \
+        python-is-python3 \
+        python3-pip \
+        ffmpeg \
+    && pip install pip -U \
+    && pip install requests==2.31.0 \
+    && pip install tqdm==4.65.0 \
+    && pip install more-itertools==8.10.0 \
+    && pip install ffmpeg-python==0.2.0 \
+    && pip install transformers==4.29.2 \
+    && pip install onnx==${ONNXVER} \
+    && pip install onnxsim==0.4.17 \
+    && pip install nvidia-pyindex \
+    && pip install onnx-graphsurgeon \
+    && pip install protobuf==3.20.3 \
+    && pip install h5py==3.7.0 \
+    && pip install onnxruntime==${ONNXRUNTIMEVER} \
+    && apt clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm /etc/apt/apt.conf.d/docker-clean
+
+ENV USERNAME=user
+RUN echo "root:root" | chpasswd \
+    && adduser --disabled-password --gecos "" "${USERNAME}" \
+    && echo "${USERNAME}:${USERNAME}" | chpasswd \
+    && echo "%${USERNAME}    ALL=(ALL)   NOPASSWD:    ALL" >> /etc/sudoers.d/${USERNAME} \
+    && chmod 0440 /etc/sudoers.d/${USERNAME}
+USER ${USERNAME}
+
+ARG WKDIR=/workdir
+WORKDIR ${WKDIR}
+RUN sudo chown ${USERNAME}:${USERNAME} ${WKDIR}
+
+RUN echo 'export PATH=${PATH}:${HOME}/.local/bin' >> ~/.bashrc \
+    && echo "export USER=`whoami`" >> ~/.bashrc
