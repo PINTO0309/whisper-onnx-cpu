@@ -1,4 +1,5 @@
 import zlib
+import numpy as np
 from typing import Iterator, TextIO
 
 
@@ -85,3 +86,12 @@ def write_srt(transcript: Iterator[dict], file: TextIO):
             file=file,
             flush=True,
         )
+
+ONNX_DTYPE_NP_DTYPE = {
+    "tensor(int64)": np.int64,
+    "tensor(float)": np.float32,
+    "tensor(float16)": np.float16,
+}
+
+def onnx_dtype_to_np_dtype_convert(onnx_dtype: str):
+    return ONNX_DTYPE_NP_DTYPE[onnx_dtype]

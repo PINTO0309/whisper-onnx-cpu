@@ -7,6 +7,7 @@ import requests
 import onnx
 import onnxruntime as ort
 from whisper.decoding import detect_language as detect_language_function, decode as decode_function
+from whisper.utils import onnx_dtype_to_np_dtype_convert
 
 
 _MODELS = {
@@ -105,6 +106,10 @@ class OnnxAudioEncoder():
                     'CPUExecutionProvider'
                 ],
             )
+        self.inputs = {
+            input.name: onnx_dtype_to_np_dtype_convert(input.type) \
+                for input in self.sess.get_inputs()
+        }
 
     def __call__(
         self,
@@ -116,7 +121,7 @@ class OnnxAudioEncoder():
                     "output",
                 ],
                 input_feed={
-                    "mel": mel,
+                    "mel": mel.astype(self.inputs["mel"]),
                 }
             )[0]
         return result
@@ -136,6 +141,10 @@ class OnnxTextDecoder():
                     'CPUExecutionProvider'
                 ],
             )
+        self.inputs = {
+            input.name: onnx_dtype_to_np_dtype_convert(input.type) \
+                for input in self.sess.get_inputs()
+        }
 
     def __call__(
         self,
@@ -152,10 +161,10 @@ class OnnxTextDecoder():
                     "cross_attention_qks",
                 ],
                 input_feed={
-                    "tokens": x,
-                    "audio_features": xa,
-                    "kv_cache": kv_cache,
-                    "offset": np.array([offset], dtype=np.int64),
+                    "tokens": x.astype(self.inputs["tokens"]),
+                    "audio_features": xa.astype(self.inputs["audio_features"]),
+                    "kv_cache": kv_cache.astype(self.inputs["kv_cache"]),
+                    "offset": np.array([offset], dtype=self.inputs["offset"]),
                 }
             )
         logits: np.ndarray = outputs[0]
