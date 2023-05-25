@@ -18,8 +18,6 @@ RUN apt-get update \
         sudo \
         build-essential \
         ca-certificates \
-    && apt-get install -y \
-        software-properties-common \
     && apt-get install -y  --no-install-recommends \
         software-properties-common \
         python3-all-dev \
