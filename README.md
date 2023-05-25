@@ -51,7 +51,9 @@ docker run --rm -it -v `pwd`:/workdir whisper-onnx-cpu
     ```
 - command
 
-    The onnx file is automatically downloaded when the sample is run. If `--language` is not specified, the tokenizer will auto-detect the language. If you are using a CPU with Hyper-Threading enabled, the code is written so that onnxruntime will infer in parallel with `(number of physical CPU cores * 2 - 1)` to maximize performance. If you are using a CPU with Hyper-Threading disabled, you may need to comment out the `sess_options` line below.
+    The onnx file is automatically downloaded when the sample is run. If `--language` is not specified, the tokenizer will auto-detect the language. If you are using a CPU with Hyper-Threading enabled, the code is written so that onnxruntime will infer in parallel with `(number of physical CPU cores * 2 - 1)` to maximize performance.
+    ![image](https://github.com/PINTO0309/whisper-onnx-cpu/assets/33194443/7e9c972b-24c6-4b45-9dc7-a06564ce976e)
+    If you are using a CPU with Hyper-Threading disabled, you may need to comment out the `sess_options` line below.
     1. https://github.com/PINTO0309/whisper-onnx-cpu/blob/94535cb1ea78ff78c3b8e4cad8dc4e9363f591dc/whisper/model.py#L103-L112
     2. https://github.com/PINTO0309/whisper-onnx-cpu/blob/94535cb1ea78ff78c3b8e4cad8dc4e9363f591dc/whisper/model.py#L141-L150
 
