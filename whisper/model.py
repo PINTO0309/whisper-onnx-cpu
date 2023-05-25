@@ -101,7 +101,7 @@ class OnnxAudioEncoder():
         super().__init__()
 
         sess_options = ort.SessionOptions()
-        sess_options.intra_op_num_threads = psutil.cpu_count(logical=False) * 2 - 1
+        sess_options.intra_op_num_threads = psutil.cpu_count(logical=True) - 1
         self.sess = \
             ort.InferenceSession(
                 path_or_bytes=model_download(name=f'{model}_encoder'),
@@ -139,7 +139,7 @@ class OnnxTextDecoder():
         super().__init__()
 
         sess_options = ort.SessionOptions()
-        sess_options.intra_op_num_threads = psutil.cpu_count(logical=False) * 2 - 1
+        sess_options.intra_op_num_threads = psutil.cpu_count(logical=True) - 1
         self.sess = \
             ort.InferenceSession(
                 path_or_bytes=model_download(name=f'{model}_decoder'),
