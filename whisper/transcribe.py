@@ -216,7 +216,10 @@ def transcribe(
                 all_tokens.extend(list(tokens[: last_slice + 1]))
             else:
                 duration = segment_duration
-                timestamps = tokens[np.nonzero(timestamp_tokens).flatten()]
+                tokens = np.asarray(tokens) if isinstance(tokens, list) else tokens
+                timestamps = tokens[
+                    np.ravel_multi_index(np.nonzero(timestamp_tokens), timestamp_tokens.shape)
+                ]
                 if len(timestamps) > 0:
                     # no consecutive timestamps but it has a timestamp; use the last one.
                     # single timestamp at the end means no speech after the last timestamp.

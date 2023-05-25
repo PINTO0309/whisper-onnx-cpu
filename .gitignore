@@ -1,4 +1,5 @@
 *.onnx
+*.mp3
 *.mp4
 *.npy
 *.engine
