@@ -37,6 +37,8 @@ docker run --rm -it -v `pwd`:/workdir whisper-onnx-cpu
 
 ## 5. Transcribe
 - `--model` option
+
+  I have a Large size model committed [here](https://github.com/PINTO0309/PINTO_model_zoo/tree/main/381_Whisper), but I was too lazy to provide it to you guys, so I excluded it as an option.
     ```
     tiny.en
     tiny
