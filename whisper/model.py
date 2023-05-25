@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import List, Dict, Tuple
 import numpy as np
 import requests
+import psutil
 import onnx
 import onnxruntime as ort
 from whisper.decoding import detect_language as detect_language_function, decode as decode_function
@@ -99,9 +100,12 @@ class OnnxAudioEncoder():
     ):
         super().__init__()
 
+        sess_options = ort.SessionOptions()
+        sess_options.intra_op_num_threads = psutil.cpu_count(logical=False) * 2 - 1
         self.sess = \
             ort.InferenceSession(
                 path_or_bytes=model_download(name=f'{model}_encoder'),
+                sess_options=sess_options,
                 providers=[
                     'CPUExecutionProvider'
                 ],
@@ -134,9 +138,12 @@ class OnnxTextDecoder():
     ):
         super().__init__()
 
+        sess_options = ort.SessionOptions()
+        sess_options.intra_op_num_threads = psutil.cpu_count(logical=False) * 2 - 1
         self.sess = \
             ort.InferenceSession(
                 path_or_bytes=model_download(name=f'{model}_decoder'),
+                sess_options=sess_options,
                 providers=[
                     'CPUExecutionProvider'
                 ],

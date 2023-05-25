@@ -3,7 +3,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ARG USERNAME=user
 ARG OS=ubuntu2204
 ARG ONNXVER=1.13.1
-ARG ONNXRUNTIMEVER=1.13.1
+ARG ONNXRUNTIMEVER=1.15.0
 
 SHELL ["/bin/bash", "-c"]
 
@@ -12,28 +12,20 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         curl \
         wget \
-        gcc \
-        git \
-        make \
         sudo \
-        build-essential \
-        ca-certificates \
-    && apt-get install -y  --no-install-recommends \
-        software-properties-common \
         python3-all-dev \
         python-is-python3 \
         python3-pip \
         ffmpeg \
     && pip install pip -U \
     && pip install requests==2.31.0 \
+    && pip install psutil==5.9.5 \
     && pip install tqdm==4.65.0 \
     && pip install more-itertools==8.10.0 \
     && pip install ffmpeg-python==0.2.0 \
     && pip install transformers==4.29.2 \
     && pip install onnx==${ONNXVER} \
     && pip install onnxsim==0.4.17 \
-    && pip install nvidia-pyindex \
-    && pip install onnx-graphsurgeon \
     && pip install protobuf==3.20.3 \
     && pip install h5py==3.7.0 \
     && pip install onnxruntime==${ONNXRUNTIMEVER} \
