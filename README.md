@@ -19,6 +19,7 @@ Although it can run directly on the host PC, I strongly recommend the use of Doc
 https://github.com/PINTO0309/PINTO_model_zoo/tree/main/381_Whisper
 
 ## 3. Docker run
+Do not use this Docker container in its raw, unprocessed form for operations. It is intended for simple testing only, so administrative privileges have been effectively disabled.
 ```bash
 git clone https://github.com/PINTO0309/whisper-onnx-cpu.git && cd whisper-onnx-cpu
 docker run --rm -it -v `pwd`:/workdir pinto0309/whisper-onnx-cpu
