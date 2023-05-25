@@ -12,7 +12,7 @@ Although it can run directly on the host PC, I strongly recommend the use of Doc
 
 1. Docker
 2. onnx 1.13.1
-3. onnxruntime 1.13.1
+3. onnxruntime 1.15.0
 4. etc (See Dockerfile.xxx)
 
 ## 2. Converted Models
