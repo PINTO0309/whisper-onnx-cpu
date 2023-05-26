@@ -300,9 +300,9 @@ LANGUAGES = {
   ```
   python whisper/transcribe.py carmack.mp3 --model tiny.en --beam_size 3
   ```
-  |audio length|origin whisper|whisper onnx cpu|
-  |:-:|:-:|:-:|
-  |92 min|67.57 min|16.43 min|
+  |audio length|whisper onnx cpu|
+  |:-:|:-:|
+  |92 min|16.43 min|
 
   ```
   Hello, everybody
