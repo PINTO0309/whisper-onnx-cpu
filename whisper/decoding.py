@@ -6,7 +6,7 @@ import numpy as np
 from whisper.audio import CHUNK_LENGTH
 from whisper.tokenizer import Tokenizer, get_tokenizer
 from whisper.utils import compression_ratio
-
+import torch
 if TYPE_CHECKING:
     from whisper.model import Whisper
 
@@ -19,6 +19,10 @@ def log_softmax(x, dim=-1):
     y = softmax(x, dim=dim)
     return np.log(y)
 
+def numpy_categorical_sample(logits, temperature):
+    logits /= temperature
+    probs = softmax(logits, dim=-1)
+    return np.array([np.random.choice(len(p), p=p) for p in probs])
 
 
 def detect_language(model: "Whisper", mel: np.ndarray, tokenizer: Tokenizer = None) -> Tuple[np.ndarray, List[dict]]:
@@ -259,14 +263,14 @@ class GreedyDecoder(TokenDecoder):
         if temperature == 0:
             next_tokens = logits.argmax(dim=-1)
         else:
-            next_tokens = np.random.choice(len(logits / temperature), p=logits / temperature)
+            next_tokens = numpy_categorical_sample(logits, temperature)
 
         logprobs = log_softmax(logits, dim=-1)
         current_logprobs = logprobs[np.arange(logprobs.shape[0]), next_tokens]
         sum_logprobs += current_logprobs * (tokens[:, -1] != self.eot)
 
         next_tokens[tokens[:, -1] == self.eot] = self.eot
-        tokens = np.concatenate([tokens, next_tokens[:, None]], dim=-1)
+        tokens = np.concatenate([tokens, next_tokens[:, None]], axis=-1)
 
         completed = (tokens[:, -1] == self.eot).all()
         return tokens, completed

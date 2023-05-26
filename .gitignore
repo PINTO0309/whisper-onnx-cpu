@@ -4,5 +4,8 @@
 *.npy
 *.engine
 *.profile
+*.srt
+*.txt
+*.vtt
 __pycache__
 packages
