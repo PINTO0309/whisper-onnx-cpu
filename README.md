@@ -49,7 +49,6 @@ whisper-onnx-cpu
     mic  : Microphone
     audio: Audito File
     ```
-
 - `--language` option
 
     Fixes the language to be recognized to the specified language. See: [6. Languages](#6-languages)
