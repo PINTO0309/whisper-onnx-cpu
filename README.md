@@ -191,6 +191,9 @@ docker run --rm -it -v `pwd`:/workdir whisper-onnx-cpu
     ```
 ## 6. Languages
 https://github.com/PINTO0309/whisper-onnx-tensorrt/blob/main/whisper/tokenizer.py
+
+<details><summary>Languages List</summary><div>
+
 ```
 LANGUAGES = {
     "en": "english",
@@ -294,6 +297,9 @@ LANGUAGES = {
     "su": "sundanese",
 }
 ```
+
+</div></details>
+
 ## 7. Benchmark
 - Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz - tiny.en
 - [youtube](https://www.youtube.com/watch?v=P6UKhR0T6cs)
