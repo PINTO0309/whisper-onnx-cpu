@@ -6,7 +6,7 @@ import numpy as np
 from whisper.audio import CHUNK_LENGTH
 from whisper.tokenizer import Tokenizer, get_tokenizer
 from whisper.utils import compression_ratio
-import torch
+
 if TYPE_CHECKING:
     from whisper.model import Whisper
 
