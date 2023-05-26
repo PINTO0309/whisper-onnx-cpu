@@ -10,6 +10,7 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends \
+        gcc \
         curl \
         wget \
         sudo \
@@ -17,6 +18,7 @@ RUN apt-get update \
         python-is-python3 \
         python3-pip \
         ffmpeg \
+        portaudio19-dev \
     && pip install pip -U \
     && pip install requests==2.31.0 \
     && pip install psutil==5.9.5 \
@@ -24,6 +26,9 @@ RUN apt-get update \
     && pip install more-itertools==8.10.0 \
     && pip install ffmpeg-python==0.2.0 \
     && pip install transformers==4.29.2 \
+    && pip install soundfile==0.12.1 \
+    && pip install SpeechRecognition==3.10.0 \
+    && pip install PyAudio==0.2.13 \
     && pip install onnx==${ONNXVER} \
     && pip install onnxsim==0.4.17 \
     && pip install protobuf==3.20.3 \
@@ -46,4 +51,5 @@ WORKDIR ${WKDIR}
 RUN sudo chown ${USERNAME}:${USERNAME} ${WKDIR}
 
 RUN echo 'export PATH=${PATH}:${HOME}/.local/bin' >> ~/.bashrc \
-    && echo "export USER=`whoami`" >> ~/.bashrc
+    && echo "export USER=`whoami`" >> ~/.bashrc \
+    && echo "sudo chmod 777 /dev/snd/*" >> ~/.bashrc

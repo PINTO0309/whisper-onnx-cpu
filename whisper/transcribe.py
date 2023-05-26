@@ -1,3 +1,4 @@
+import io
 import os
 import sys
 sys.path.append(os.getcwd())
@@ -13,6 +14,9 @@ warnings.simplefilter(action='ignore', category=RuntimeWarning)
 
 import numpy as np
 import tqdm
+import pyaudio
+import soundfile as sf
+import speech_recognition as sr
 
 from whisper.model import load_model, available_models
 from whisper.audio import SAMPLE_RATE, N_FRAMES, HOP_LENGTH, pad_or_trim, log_mel_spectrogram
@@ -23,11 +27,35 @@ from whisper.utils import exact_div, format_timestamp, optional_int, optional_fl
 if TYPE_CHECKING:
     from whisper.model import Whisper
 
+class Color:
+    BLACK          = '\033[30m'
+    RED            = '\033[31m'
+    GREEN          = '\033[32m'
+    YELLOW         = '\033[33m'
+    BLUE           = '\033[34m'
+    MAGENTA        = '\033[35m'
+    CYAN           = '\033[36m'
+    WHITE          = '\033[37m'
+    COLOR_DEFAULT  = '\033[39m'
+    BOLD           = '\033[1m'
+    UNDERLINE      = '\033[4m'
+    INVISIBLE      = '\033[08m'
+    REVERCE        = '\033[07m'
+    BG_BLACK       = '\033[40m'
+    BG_RED         = '\033[41m'
+    BG_GREEN       = '\033[42m'
+    BG_YELLOW      = '\033[43m'
+    BG_BLUE        = '\033[44m'
+    BG_MAGENTA     = '\033[45m'
+    BG_CYAN        = '\033[46m'
+    BG_WHITE       = '\033[47m'
+    BG_DEFAULT     = '\033[49m'
+    RESET          = '\033[0m'
 
 def transcribe(
+    *,
     model: "Whisper",
     audio: Union[str, np.ndarray],
-    *,
     verbose: Optional[bool] = None,
     temperature: Union[float, Tuple[float, ...]] = (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
     compression_ratio_threshold: Optional[float] = 2.4,
@@ -249,7 +277,8 @@ def transcribe(
 
 def cli():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("audio", nargs="+", type=str, help="audio file(s) to transcribe")
+    parser.add_argument("--mode", type=str, default="audio", choices=["audio", "mic"], help="Audio file(audio) or Microphone(mic)")
+    parser.add_argument("--audio", nargs="*", type=str, help="Specify the path to at least one or more audio files (mp4, mp3, etc.). e.g. --audio aaa.mp4 bbb.mp3 ccc.mp4")
     parser.add_argument("--model", default="small", choices=available_models(), help="name of the Whisper model to use")
     parser.add_argument("--output_dir", "-o", type=str, default=".", help="directory to save the outputs")
     parser.add_argument("--verbose", type=str2bool, default=True, help="whether to print out the progress and debug messages")
@@ -275,6 +304,7 @@ def cli():
     args = parser.parse_args().__dict__
     model_name: str = args.pop("model")
     output_dir: str = args.pop("output_dir")
+    mode: str = args.pop("mode")
     os.makedirs(output_dir, exist_ok=True)
 
     if model_name.endswith(".en") and args["language"] not in {"en", "English"}:
@@ -290,22 +320,71 @@ def cli():
 
     model = load_model(model_name)
 
-    for audio_path in args.pop("audio"):
-        result = transcribe(model, audio_path, temperature=temperature, **args)
+    if mode == 'audio':
+        audios = args.pop("audio")
+        if not audios:
+            print(f"{Color.RED}ERROR:{Color.RESET} Specify the path to at least one or more audio files (mp4, mp3, etc.). e.g. --audio aaa.mp4 bbb.mp3 ccc.mp4")
+            sys.exit(0)
+        for audio_path in audios:
+            result = \
+                transcribe(
+                    model=model,
+                    audio=audio_path,
+                    temperature=temperature,
+                    **args,
+                )
 
-        audio_basename = os.path.basename(audio_path)
+            audio_basename = os.path.basename(audio_path)
 
-        # save TXT
-        with open(os.path.join(output_dir, audio_basename + ".txt"), "w", encoding="utf-8") as txt:
-            write_txt(result["segments"], file=txt)
+            # save TXT
+            with open(os.path.join(output_dir, audio_basename + ".txt"), "w", encoding="utf-8") as txt:
+                write_txt(result["segments"], file=txt)
 
-        # save VTT
-        with open(os.path.join(output_dir, audio_basename + ".vtt"), "w", encoding="utf-8") as vtt:
-            write_vtt(result["segments"], file=vtt)
+            # save VTT
+            with open(os.path.join(output_dir, audio_basename + ".vtt"), "w", encoding="utf-8") as vtt:
+                write_vtt(result["segments"], file=vtt)
 
-        # save SRT
-        with open(os.path.join(output_dir, audio_basename + ".srt"), "w", encoding="utf-8") as srt:
-            write_srt(result["segments"], file=srt)
+            # save SRT
+            with open(os.path.join(output_dir, audio_basename + ".srt"), "w", encoding="utf-8") as srt:
+                write_srt(result["segments"], file=srt)
+
+    elif mode == 'mic':
+        args.pop("audio")
+        p = pyaudio.PyAudio()
+        info = p.get_host_api_info_by_index(0)
+        num_devices = info.get("deviceCount", 0)
+        for i in range(num_devices):
+            device_info = p.get_device_info_by_host_api_device_index(0, i)
+            if device_info.get("maxInputChannels") > 0:
+                print(f"Input Device ID {i}, - {device_info.get('name')}")
+        device_index: int = int(input("Please input your microphone Device ID: "))
+        recognizer = sr.Recognizer()
+        mic = sr.Microphone(sample_rate=16_000, device_index=device_index)
+        try:
+            print("Speak now! (CTRL + C to exit the application)")
+            while True:
+                with mic as audio_source:
+                    recognizer.adjust_for_ambient_noise(audio_source)
+                    audio = recognizer.listen(audio_source)
+                try:
+                    wav_data = audio.get_wav_data()
+                    wav_stream = io.BytesIO(wav_data)
+                    audio_array, _ = sf.read(wav_stream)
+                    audio_array = audio_array.astype(np.float32)
+                    result = \
+                        transcribe(
+                            model=model,
+                            audio=audio_array,
+                            temperature=temperature,
+                            **args,
+                        )
+                except sr.UnknownValueError:
+                    pass
+                except sr.RequestError as e:
+                    pass
+        except KeyboardInterrupt:
+            # allow CTRL + C to exit the application
+            pass
 
 
 if __name__ == '__main__':

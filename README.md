@@ -22,7 +22,11 @@ https://github.com/PINTO0309/PINTO_model_zoo/tree/main/381_Whisper
 Do not use this Docker container in its raw, unprocessed form for operations. It is intended for simple testing only, so administrative privileges have been effectively disabled.
 ```bash
 git clone https://github.com/PINTO0309/whisper-onnx-cpu.git && cd whisper-onnx-cpu
-docker run --rm -it -v `pwd`:/workdir pinto0309/whisper-onnx-cpu
+
+docker run --rm -it \
+-v `pwd`:/workdir \
+--device /dev/snd:/dev/snd \
+pinto0309/whisper-onnx-cpu
 ```
 
 ## 4. Docker build
@@ -33,10 +37,22 @@ docker build -t whisper-onnx-cpu -f Dockerfile.cpu .
 ```
 ### 4-2. docker run
 ```bash
-docker run --rm -it -v `pwd`:/workdir whisper-onnx-cpu
+docker run --rm -it \
+-v `pwd`:/workdir \
+--device /dev/snd:/dev/snd \
+whisper-onnx-cpu
 ```
 
 ## 5. Transcribe
+- `--mode` option
+    ```
+    mic  : Microphone
+    audio: Audito File
+    ```
+
+- `--language` option
+    Fixes the language to be recognized to the specified language. See: [6. Languages](#6-languages)
+
 - `--model` option
 
   I have a Large size model committed [here](https://github.com/PINTO0309/PINTO_model_zoo/tree/main/381_Whisper), but I was too lazy to provide it to you guys, so I excluded it as an option.
@@ -102,6 +118,8 @@ docker run --rm -it -v `pwd`:/workdir whisper-onnx-cpu
     ```
     usage: transcribe.py
         [-h]
+        [--mode {audio,mic}]
+        [--audio [AUDIO [AUDIO ...]]]
         [--model {tiny.en,tiny,base.en,base,small.en,small,medium.en,medium}]
         [--output_dir OUTPUT_DIR]
         [--verbose VERBOSE]
@@ -119,15 +137,17 @@ docker run --rm -it -v `pwd`:/workdir whisper-onnx-cpu
         [--compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD]
         [--logprob_threshold LOGPROB_THRESHOLD]
         [--no_speech_threshold NO_SPEECH_THRESHOLD]
-        audio [audio ...]
-
-    positional arguments:
-      audio
-        audio file(s) to transcribe
 
     optional arguments:
       -h, --help
         show this help message and exit
+      --mode {audio,mic}
+        audio: Audio file, mic: Microphone
+        (default: audio)
+      --audio [AUDIO [AUDIO ...]]
+        Specify the path to at least one or more audio files (mp4, mp3, etc.).
+        e.g. --audio aaa.mp4 bbb.mp3 ccc.mp4
+        (default: None)
       --model {tiny.en,tiny,base.en,base,small.en,small,medium.en,medium}
         name of the Whisper model to use
         (default: small)
@@ -143,6 +163,7 @@ docker run --rm -it -v `pwd`:/workdir whisper-onnx-cpu
         (default: transcribe)
       --language {af, am, ...}
         language spoken in the audio, specify None to perform language detection
+        See: [6. Languages](#6-languages)
         (default: None)
       --temperature TEMPERATURE
         temperature to use for sampling
