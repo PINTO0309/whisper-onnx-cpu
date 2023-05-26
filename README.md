@@ -331,3 +331,46 @@ LANGUAGES = {
     :
     :
   ```
+  ```
+  python whisper/transcribe.py carmack.mp3 --model base.en --beam_size 3
+  ```
+  |audio length|whisper onnx cpu|
+  |:-:|:-:|
+  |92 min|40.51 min|
+  ```
+  Hello everybody.
+  We have a good crowd for John's second talk.
+  It's very exciting.
+  This is the first year that John will be talking twice.
+  A couple of things to know.
+  John will talk for about an hour or so,
+  and then we'll have 30 minutes for questions.
+  The mic is right there.
+  So just line up when we get to the questions.
+  Try to keep your questions on what John talked about.
+  If you get up and ask when Doom 4 is coming out,
+  I'm going to kick you in the knee.
+  So right there.
+  So I will not waste any more time,
+  but you guys in the back,
+  because John's going to write in the board,
+  and we have plenty empty seats here, you can file in.
+  Don't worry that there's reserved seats there.
+  Just go ahead and sit in them.
+  Alright, I will give you guys Mr. Carmack.
+  APPLAUSE
+  OK, so I guess this is sort of going to be like a school room session.
+  I deluded myself for a little while that this would be the first talk
+  where I ever actually made slides to present,
+  but it didn't actually come to pass,
+  so it's going to be notes and talking and some scribbling on the board again.
+  So almost all of what we do in game development
+  is really more about artistry.
+  It's about trying to appeal to people,
+  but there's the small section of the small section of what goes into the game
+  that's drawing the pictures on the screen
+  that you can at least make some ties to the hardest of hard sciences.
+  And while it's great that people are researching the psychology
+    :
+    :
+  ```
