@@ -9,9 +9,11 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "carmack.mp3",
-                "--model", "tiny.en",
-                "--beam_size", "3",
+                "--mode", "mic",
+                // "--audio", "carmack.mp3",
+                "--model", "tiny",
+                "--language", "ja",
+                "--beam_size", "2",
             ]
         }
     ]
