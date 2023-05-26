@@ -301,7 +301,7 @@ LANGUAGES = {
 </div></details>
 
 ## 7. Benchmark
-- Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz - tiny.en
+- Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
 - [youtube](https://www.youtube.com/watch?v=P6UKhR0T6cs)
   ```
   python whisper/transcribe.py carmack.mp3 --model tiny.en --beam_size 3
