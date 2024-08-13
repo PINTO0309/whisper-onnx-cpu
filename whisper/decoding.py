@@ -261,7 +261,7 @@ class GreedyDecoder(TokenDecoder):
     def update(self, tokens: np.ndarray, logits: np.ndarray, sum_logprobs: np.ndarray) -> Tuple[np.ndarray, bool]:
         temperature = self.temperature
         if temperature == 0:
-            next_tokens = logits.argmax(dim=-1)
+            next_tokens = logits.argmax(axis=-1)
         else:
             next_tokens = numpy_categorical_sample(logits, temperature)
 
