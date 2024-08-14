@@ -11,8 +11,8 @@ Click here for GPU version: https://github.com/PINTO0309/whisper-onnx-tensorrt
 Although it can run directly on the host PC, I strongly recommend the use of Docker to avoid breaking the environment.
 
 1. Docker
-2. onnx 1.13.1
-3. onnxruntime 1.15.0
+2. onnx 1.16.1
+3. onnxruntime 1.18.1
 4. etc (See Dockerfile.xxx)
 
 ## 2. Converted Models

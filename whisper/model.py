@@ -6,6 +6,7 @@ import numpy as np
 import requests
 import psutil
 import onnx
+from onnx.serialization import ProtoSerializer
 import onnxruntime as ort
 from whisper.decoding import detect_language as detect_language_function, decode as decode_function
 from whisper.utils import onnx_dtype_to_np_dtype_convert
@@ -32,8 +33,9 @@ def model_download(name: str, onnx_file_save_path: str='.') -> onnx.ModelProto:
             onnx_graph: onnx.ModelProto = onnx.load(f)
             onnx.save(onnx_graph, f'{onnx_file_save_path}/{name}_11.onnx')
     else:
+        serializer: ProtoSerializer = onnx._get_serializer(fmt='protobuf')
         onnx_graph: onnx.ModelProto = onnx.load(onnx_file_path)
-        onnx_serialized_graph = onnx._serialize(onnx_graph)
+        onnx_serialized_graph = serializer.serialize_proto(proto=onnx_graph)
     return onnx_serialized_graph
 
 def load_model(name: str):
