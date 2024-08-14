@@ -7,5 +7,7 @@
 *.srt
 *.txt
 *.vtt
+*.zip
+*.jpg
 __pycache__
 packages
