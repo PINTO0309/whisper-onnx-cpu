@@ -1,5 +1,9 @@
 import io
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+os.environ['USE_TF'] = '-1'
+os.environ['USE_TORCH'] = '-1'
+os.environ['USE_JAX'] = '-1'
 import sys
 sys.path.append(os.getcwd())
 import argparse
