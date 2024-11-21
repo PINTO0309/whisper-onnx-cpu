@@ -352,7 +352,7 @@ LANGUAGES = {
     :
   ```
   ```
-  python whisper/transcribe.py carmack.mp3 --model tiny.en --beam_size 2
+  python whisper/transcribe.py --audio carmack.mp3 --model tiny.en --beam_size 2
   ```
   |audio length|whisper onnx cpu|
   |:-:|:-:|
@@ -379,7 +379,7 @@ LANGUAGES = {
     :
   ```
   ```
-  python whisper/transcribe.py carmack.mp3 --model tiny.en --beam_size 5
+  python whisper/transcribe.py --audio carmack.mp3 --model tiny.en --beam_size 5
   ```
   |audio length|whisper onnx cpu|
   |:-:|:-:|
@@ -406,7 +406,7 @@ LANGUAGES = {
     :
   ```
   ```
-  python whisper/transcribe.py carmack.mp3 --model base.en --beam_size 3
+  python whisper/transcribe.py --audio carmack.mp3 --model base.en --beam_size 3
   ```
   |audio length|whisper onnx cpu|
   |:-:|:-:|
@@ -449,7 +449,7 @@ LANGUAGES = {
     :
   ```
   ```
-  python whisper/transcribe.py carmack.mp3 --model base.en --beam_size 2
+  python whisper/transcribe.py --audio carmack.mp3 --model base.en --beam_size 2
   ```
   |audio length|whisper onnx cpu|
   |:-:|:-:|
